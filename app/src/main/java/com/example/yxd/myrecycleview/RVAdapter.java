@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Yxd on 2016/11/3.
@@ -27,30 +28,62 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position==0)
+        {
+            return 1;
+        }
+        return 2;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder holder=new MyViewHolder(inflater.inflate(R.layout.item,parent,false));
-        return holder;
+        switch (viewType)
+        {
+            case 1:
+                MyHeaViewHolder myHeaViewHolder=new MyHeaViewHolder(inflater.inflate(R.layout.head,parent,false));
+                return myHeaViewHolder;
+
+            case 2:
+                MyViewHolder holder=new MyViewHolder(inflater.inflate(R.layout.item,parent,false));
+                return holder;
+
+            default:
+                MyViewHolder myViewHolder=new MyViewHolder(inflater.inflate(R.layout.item,parent,false));
+                return myViewHolder;
+
+        }
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        ((MyViewHolder)holder).tv.setText(itemStrings[position]);
-        if (onItemClickListener!=null)
+        if (getItemViewType(position)==1 && position==0)
         {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            ((MyHeaViewHolder)holder).tv.setText("recycleView的头部");
+            ((MyHeaViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClick(holder.itemView,position,itemStrings[position]);
+                    Toast.makeText(mContex,position+"",Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+        if (getItemViewType(position)==2 && position!=0)
+        {
+            ((MyViewHolder)holder).tv.setText(itemStrings[position-1]);
+            ((MyViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContex,position+"",Toast.LENGTH_LONG).show();
                 }
             });
         }
-
     }
 
 
     @Override
     public int getItemCount() {
-        return itemStrings.length;
+        return itemStrings.length+1;
     }
     class  MyViewHolder extends RecyclerView.ViewHolder
     {
@@ -58,6 +91,15 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public MyViewHolder(View itemView) {
             super(itemView);
             tv= (TextView) itemView.findViewById(R.id.item_tv);
+        }
+    }
+    class MyHeaViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView tv;
+
+        public MyHeaViewHolder(View itemView) {
+            super(itemView);
+            tv= (TextView) itemView.findViewById(R.id.heae_text);
         }
     }
 }
