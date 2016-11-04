@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView= (RecyclerView) findViewById(R.id.Recycleview);
-        recyclerView.setLayoutManager(gridLayoutManager=new GridLayoutManager(MainActivity.this,2));
+        recyclerView.setLayoutManager(gridLayoutManager=new GridLayoutManager(MainActivity.this,6));
         adapter=new RVAdapter(this);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(myOnItemClickListener=new MyOnItemClickListener() {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return (position==0) ? gridLayoutManager.getSpanCount() : 1;
+                return (adapter.getItemViewType(position)==1) ? gridLayoutManager.getSpanCount() :1; //返回的数值表示当前的item占总份数的比重
             }
         });
 
